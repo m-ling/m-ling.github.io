@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="Nymph"><title>js引擎的执行机制---event · nymph's blog</title><meta name="description" content="首先我们先来思考几个问题：
+
+为什么 js 是单线程？
+为什么需要异步？异步又是如何实现的？
+什么是事件循环（Event Loop）?
+
+
+一、js 为什么是单线程&amp;emsp; &amp;emsp;Javascript 作为一种浏览器脚本语言，它需要操作 DOM，如果它是多线程语言，那将会出现很多复杂的问题"><meta name="keywords" content="前端,技术，社交，博客，网页"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><script src="/js/jquery.js"></script><script src="/js/love.js"></script><meta name="generator" content="Hexo 4.2.0"></head><body><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.png" style="width:104px;margin-bottom: 20px;"><h3 title=""><a href="/">nymph's blog</a></h3><div class="description"><p>心之所愿，无事不成。<br> Nothing is impossible to a willing heart.</p></div></div></div><ul class="social-links"><li><a href="https://github.com/m-ling" target="_blank" rel="noopener"><i class="fa fa-github"></i></a></li><li><a href="mailto:2399144697@qq.com"><i class="fa fa-envelope"></i></a></li><li><a href="https://qm.qq.com/cgi-bin/qm/qr?k=U8tooiXlKX-ws60cxlEvGMHk7zgVu35s&amp;noverify=0" target="_blank" rel="noopener"><i class="fa fa-qq"></i></a></li></ul><div class="footer"><div class="p"> <span>© 2020 </span><i class="fa fa-star"></i><span> Nymph</span></div><div class="by_farbox"><span>Powered by </span><a href="https://hexo.io/zh-cn/" target="_blank">Hexo </a><span> & </span><a href="https://github.com/mrcore/hexo-theme-Anatole-Core" target="_blank">Anatole-Core.  </a><a href="http://www.beian.miit.gov.cn/" target="_blank">&nbsp;</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/guestbook">留言</a></li></div><div class="information"><div class="back_btn"><li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li></div></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h3><a>js引擎的执行机制---event</a></h3></div><div class="post-content"><p>首先我们先来思考几个问题：</p>
+<ul>
+<li>为什么 js 是单线程？</li>
+<li>为什么需要异步？异步又是如何实现的？</li>
+<li>什么是事件循环（Event Loop）?</li>
+</ul>
+<hr>
+<h4 id="一、js-为什么是单线程"><a href="#一、js-为什么是单线程" class="headerlink" title="一、js 为什么是单线程"></a>一、js 为什么是单线程</h4><p>&emsp; &emsp;Javascript 作为一种浏览器脚本语言，它需要操作 DOM，如果它是多线程语言，那将会出现很多复杂的问题。我们可以想象一下，如果 js 有两个线程，在同一时间，一个线程修改了某个 DOM 节点，而另一个线程删除了这个 DOM 节点，那么浏览器应该听谁的话呢？所以 js 单线程的特性基本没有改变的可能性。<br>&emsp; &emsp; 随着现在 CPU 的性能增强，单线程无法充分发挥计算机的计算能力。H5 提供了 Web Worker 标准，为 JavaScript 创造多线程环境，允许主线程创建 Worker 线程，将一些任务分配给后者运行。但子线程完全受主线程控制，且不得操作 DOM。所以，这个新标准并没有改变 JavaScript 单线程的本质。</p>
+<h4 id="二、为什么需要异步以及异步的实现"><a href="#二、为什么需要异步以及异步的实现" class="headerlink" title="二、为什么需要异步以及异步的实现"></a>二、为什么需要异步以及异步的实现</h4><p><img src="../../../../images/paidui.jpg" alt=""></p>
+<p> &emsp; &emsp; “同步模式”就是程序从上到下按顺序执行，后一个任务等待前一个任务结束，然后再执行。如果前任务耗时很长，后面的任务都必须排队等着，这样就会拖延整个程序的执行。后面的代码就会被阻塞。对于用户而言,阻塞就意味着”卡死”,这样就导致了很差的用户体验。<br>&emsp; &emsp; “异步模式”则完全不同，每一个任务有一个或多个回调函数（callback），前一个任务结束后，不是执行后一个任务，而是执行回调函数，后一个任务则是不等前一个任务结束就执行，所以程序的执行顺序与任务的排列顺序是不一致的、异步的。</p>
+<hr>
+<p><u><a href="">异步的处理方式有（后一篇文章中会详细讲述）</a></u>：</p>
+<ul>
+<li>回调函数（易形成回调地狱，避免使用）</li>
+<li>事件监听</li>
+<li>promise</li>
+<li>Generator 函数</li>
+<li>优雅的 async/await</li>
+</ul>
+<h4 id="三、Event-Loop"><a href="#三、Event-Loop" class="headerlink" title="三、Event Loop"></a>三、Event Loop</h4><p><img src="../../../../images/Eventloop.png" alt=""></p>
+<p><strong>上图是事件循环示意图，具体流程如下：</strong></p>
+<ol>
+<li>主线程顺序执行代码，形成相应的堆和栈。</li>
+<li>主线程遇到异步任务，指给对应的异步进程进行处理（WEB API）。</li>
+<li>异步任务处理完成，将相应的异步任务推入任务队列。</li>
+<li>主线任务执行完毕，查询任务队列，如果存在任务，就取出一个任务推入主线程（先进先出）。</li>
+</ol>
+<blockquote>
+<p>以上四个步骤循环执行，就形成了事件循环。</p>
+</blockquote>
+<h5 id="宏任务和微任务"><a href="#宏任务和微任务" class="headerlink" title="宏任务和微任务"></a>宏任务和微任务</h5><blockquote>
+<p>js 引擎将所有任务分为宏任务和微任务<br>宏任务：setTimeout，setInterval，setImmediate，ajax<br>微任务：process.nextTick，Promise.then</p>
+</blockquote>
+<p> 在事件循环中，每进行一次循环操作称为 tick，每一次 tick 的任务处理模型是比较复杂的，但关键步骤如下：</p>
+<ul>
+<li>执行一个宏任务（栈中没有就从事件队列中获取）</li>
+<li>执行过程中如果遇到微任务，就将它添加到微任务的任务队列中</li>
+<li>宏任务执行完毕后，立即执行当前微任务队列中的<u>所有微任务</u>（依次执行）</li>
+<li>当前宏任务执行完毕，开始检查渲染，然后 GUI 线程接管渲染</li>
+<li>渲染完毕后，JS 线程继续接管，开始下一个宏任务（从事件队列中获取）</li>
+</ul>
+<hr>
+<p>来看一道面试题帮助理解 (^_^)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'内层宏事件'</span>)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'外层宏事件1'</span>)</span><br><span class="line">  resolve()</span><br><span class="line">&#125;)</span><br><span class="line">  .then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'微事件1'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  .then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'微事件2'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'外层宏事件2'</span>)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>浏览器执行 js，遇到 setTimeout 分发宏任务到 Event Queue 中。第一个宏任务进入主线程，直接输出 ’外层宏事件 1‘ ，然后 ‘外层宏事件 2’。执行完后开始执行被分发到微任务队列的 then，执行完所有微任务队列的事件后，开始执行下一个宏任务，输出 ‘内层宏事件’</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//正确答案</span></span><br><span class="line">外层宏事件<span class="number">1</span></span><br><span class="line">外层宏事件<span class="number">2</span></span><br><span class="line">微事件<span class="number">1</span></span><br><span class="line">微事件<span class="number">2</span></span><br><span class="line">内层宏事件</span><br></pre></td></tr></table></figure>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2020-06-12</span><i class="fa fa-tag"></i><a class="tag" href="/tags/js高级/" title="js高级">js高级 </a><span class="leancloud_visitors"></span></div></div></div></div><div class="share"><div class="evernote"><a class="fa fa-bookmark" href="" onclick="javascript:join_favorite()" ref="sidebar"></a></div><div class="weibo"><a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a></div><div class="twitter"><a class="fa fa-twitter" href="http://twitter.com/home?status=,http://yoursite.com/2020/06/12/EventLoop/,nymph' target="_blank" rel="noopener"s blog,js引擎的执行机制---event,;"></a></div></div><div class="pagination"><ul class="clearfix"><li class="next pagbuttons"><a class="btn" role="navigation" href="/2017/05/26/hello-world/" title="Hello World">下一篇</a></li></ul></div><script src="/js/visitors.js"></script><a id="comments"></a><div id="vcomments" style="margin:0 30px 30px;"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="//cdn.jsdelivr.net/gh/xcss/valine@latest/dist/Valine.min.js"></script><script>var valine = new Valine({
+  el:'#vcomments',
+  notify:false || false, 
+  verify:false|| false, 
+  app_id:'fgMYUsyANJ65Qbopojpd6Bqq-gzGzoHsz',
+  app_key:'Phnz9z6fIRe0etmwEJjJnKUd',
+  placeholder:'念念不忘，必有回响...',
+  path: window.location.pathname,
+  serverURLs: '',
+  visitor:true,
+  enableQQ:true,
+  avatarForce:true,
+  recordIP:true,
+  avatar:'wavatar',
+})</script></div></div></div></div><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/add-bookmark.js"></script><script src="/js/baidu-tongji.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"superSample":2,"width":180,"height":330,"position":"left","opacity":0.8,"hOffset":0,"vOffset":-20},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false});</script></body></html>
