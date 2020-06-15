@@ -37,7 +37,7 @@ a:visited {
 
 a:hover,
 a:active {
-  color: #4786D6;
+  color: #82701b;
 }
 
 /*basic styles ends*/
@@ -154,7 +154,7 @@ a:active {
 }
 
 .page-top .nav a:hover {
-  color: #4786D6;
+  color: #82701b;
 }
 
 .page-top .nav a.current {
@@ -256,12 +256,12 @@ a:active {
 }
 
 .sidebar .social-links a:hover {
-  color: #4786D6;
+  color: #7b632c;
 }
 
 .post {
   background-color: #FFF;
-  margin: 30px 50px 30px 80px;
+  margin: 30px 80px 30px 50px;
 }
 
 .post .post-title h1 {
@@ -293,7 +293,7 @@ a:active {
 .post .post-title a {
   text-decoration: none;
   letter-spacing: 1px;
-  color: rgb(95, 95, 95);
+  color: #5f5f5f;
 }
 
 .post .post-title a:hover {
@@ -303,11 +303,11 @@ a:active {
 .post .post-content a {
   text-decoration: none;
   letter-spacing: 1px;
-  color: rgb(66, 66, 66);
+  color: #5f5f5f;
 }
 
 .post .post-content a:hover {
-  color: #2F69B3;
+  color: #82701b;
 }
 
 .post .post-content h1 {
@@ -370,7 +370,7 @@ a:active {
 }
 
 .post .post-footer .meta a:hover {
-  color: #4786D6;
+  color: #82701b;
 }
 
 .post .post-footer .meta i {
@@ -479,7 +479,7 @@ a:active {
 }
 
 .footer a:hover {
-  color: #4786D6;
+  color: #82701b;
 }
 
 /*for archive*/
@@ -524,7 +524,7 @@ a:active {
 }
 
 .list-with-title .listing .listing-post a:hover {
-  color: #4786D6;
+  color: #82701b;
 }
 
 /* share */
@@ -754,6 +754,16 @@ a.btn {
 .page_404 {
   text-align: center;
   padding-top: 50px;
+}
+
+@media screen and (max-width: 650px) {
+  .post {
+    margin: 30px !important;
+  }
+
+  blockquote {
+    border-left: #b7ae89 0.35em solid !important;
+  }
 }
 
 @media screen and (max-width: 960px) {

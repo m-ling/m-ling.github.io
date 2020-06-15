@@ -791,6 +791,16 @@ a.btn {
 	padding-top: 50px;
 }
 
+@media screen and (max-width: 650px) {
+	.post {
+		margin: 30px !important;
+	}
+
+	blockquote {
+		border-left: #b7ae89 0.35em solid !important;
+	}
+}
+
 @media screen and (max-width: 960px) {
 	.sidebar {
 		width: 100%;
